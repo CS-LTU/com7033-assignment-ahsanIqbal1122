@@ -1,0 +1,342 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+  .home-wrapper {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    margin: -30px -30px 0 -30px;
+    padding: 120px 30px 80px 30px;
+    border-radius: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .home-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(255,255,255,0.05) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .hero {
+    text-align: center;
+    color: white;
+    margin-bottom: 60px;
+    position: relative;
+    z-index: 1;
+    animation: fadeInDown 0.8s ease-out;
+  }
+
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .hero h1 {
+    font-size: 3.2rem;
+    font-weight: 900;
+    margin-bottom: 16px;
+    letter-spacing: -1px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    animation: fadeInDown 0.8s ease-out 0.1s both;
+  }
+
+  .hero .subtitle {
+    font-size: 1.3rem;
+    opacity: 0.98;
+    margin-bottom: 12px;
+    font-weight: 500;
+    animation: fadeInDown 0.8s ease-out 0.2s both;
+  }
+
+  .hero .tagline {
+    font-size: 1rem;
+    opacity: 0.9;
+    animation: fadeInDown 0.8s ease-out 0.3s both;
+  }
+
+  .features {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+  }
+
+  .feature-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 14px 22px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.8s ease-out 0.4s both;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .feature-item:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  }
+
+  .feature-item i {
+    font-size: 1.2rem;
+  }
+
+  .cards-section {
+    margin-top: 50px;
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .card-box {
+    background: white;
+    border-radius: 16px;
+    padding: 40px 32px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+    border-top: 5px solid #667eea;
+    position: relative;
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  .card-box:nth-child(1) {
+    animation-delay: 0.5s;
+  }
+
+  .card-box:nth-child(2) {
+    animation-delay: 0.6s;
+  }
+
+  .card-box:nth-child(3) {
+    animation-delay: 0.7s;
+  }
+
+  .card-box:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 25px 70px rgba(102, 126, 234, 0.15);
+    border-top-color: #764ba2;
+  }
+
+  .card-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    display: inline-block;
+    transition: transform 0.3s ease;
+  }
+
+  .card-box:hover .card-icon {
+    transform: scale(1.1) rotate(5deg);
+  }
+
+  .card-box h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 8px;
+  }
+
+  .card-meta {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+
+  .card-meta span {
+    font-size: 0.75rem;
+    background: #f0f4ff;
+    color: #667eea;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 600;
+  }
+
+  .card-box p {
+    font-size: 0.95rem;
+    color: #4b5563;
+    line-height: 1.5;
+    margin-bottom: 24px;
+  }
+
+  .btn-primary-gradient {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+  }
+
+  .btn-primary-gradient:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(102, 126, 234, 0.35);
+    color: white;
+  }
+
+  .btn-secondary-outline {
+    background: white;
+    color: #667eea;
+    border: 2px solid #667eea;
+    padding: 12px 26px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    width: 100%;
+    text-align: center;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+  }
+
+  .btn-secondary-outline:hover {
+    background: #667eea;
+    color: white;
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.25);
+  }
+
+  .btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .info-text {
+    font-size: 0.8rem;
+    color: #999;
+    margin-top: 12px;
+    text-align: center;
+  }
+
+  @media (max-width: 768px) {
+    .hero h1 {
+      font-size: 2rem;
+    }
+    .hero .subtitle {
+      font-size: 0.95rem;
+    }
+    .features {
+      flex-direction: column;
+      gap: 12px;
+    }
+    .cards-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<div class="home-wrapper">
+  <div class="hero">
+    <h1>🏥 Stroke Intelligence System</h1>
+    <div class="subtitle">SIS – Advanced Healthcare Platform</div>
+    <div class="tagline">Empowering medical professionals with intelligent stroke risk management</div>
+
+    <div class="features">
+      <div class="feature-item">
+        <span>📊 Real-time Analytics</span>
+      </div>
+      <div class="feature-item">
+        <span>🔒 Secure Data</span>
+      </div>
+      <div class="feature-item">
+        <span>💊 Patient Management</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cards-section">
+  <div class="cards-grid">
+    <!-- DOCTOR CARD -->
+    <div class="card-box">
+      <div class="card-icon">👨‍⚕️</div>
+      <h3>For Doctors</h3>
+      <div class="card-meta">
+        <span>Clinical Access</span>
+        <span>Patient Records</span>
+        <span>Analytics</span>
+      </div>
+      <p>Access patient data, monitor stroke risk, and make informed clinical decisions with advanced analytics and real-time insights.</p>
+      <div class="btn-group">
+        <a href="{{ url_for('auth.login') }}" class="btn-primary-gradient">Sign In</a>
+        <a href="{{ url_for('auth.register_doctor') }}" class="btn-secondary-outline">Create Account</a>
+      </div>
+      <div class="info-text">Healthcare provider credentials required</div>
+    </div>
+
+    <!-- PATIENT CARD -->
+    <div class="card-box">
+      <div class="card-icon">🩺</div>
+      <h3>For Patients</h3>
+      <div class="card-meta">
+        <span>Health Records</span>
+        <span>Medical History</span>
+        <span>Secure Portal</span>
+      </div>
+      <p>View your complete health records, track medical history, and access your personalized stroke risk assessment securely.</p>
+      <div class="btn-group">
+        <a href="{{ url_for('auth.login') }}" class="btn-primary-gradient">Sign In</a>
+        <a href="{{ url_for('auth.register_patient') }}" class="btn-secondary-outline">Register Now</a>
+      </div>
+      <div class="info-text">Secure login with personal credentials</div>
+    </div>
+
+    <!-- ADMIN CARD -->
+    <div class="card-box">
+      <div class="card-icon">⚙️</div>
+      <h3>For Administrators</h3>
+      <div class="card-meta">
+        <span>System Control</span>
+        <span>User Management</span>
+        <span>Data Integrity</span>
+      </div>
+      <p>Manage system users, maintain data security, oversee platform operations, and ensure smooth functioning of the SIS platform.</p>
+      <div class="btn-group">
+        <a href="{{ url_for('auth.login') }}" class="btn-primary-gradient">Admin Portal</a>
+      <div class="info-text">Admin credentials required for access</div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

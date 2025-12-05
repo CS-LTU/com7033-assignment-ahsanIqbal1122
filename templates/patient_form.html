@@ -1,0 +1,65 @@
+
+<form method="post" action="{{ form_action if form_action is defined else '' }}">
+  <div class="row">
+    {% if show_id is not defined or show_id %}
+    <div class="col-md-4 mb-3">
+      <label class="form-label">ID</label>
+      <input class="form-control" name="id" value="{{ patient['id'] if patient else '' }}" {% if action == 'Edit' %}readonly{% endif %}>
+    </div>
+    {% endif %}
+    <div class="col-md-4 mb-3">
+      <label class="form-label">Gender</label>
+      <input class="form-control" name="gender" value="{{ patient['gender'] if patient else '' }}">
+    </div>
+    <div class="col-md-4 mb-3">
+      <label class="form-label">Age</label>
+      <input class="form-control" name="age" value="{{ patient['age'] if patient else '' }}">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3 mb-3">
+      <label class="form-label">Hypertension (0/1)</label>
+      <input class="form-control" name="hypertension" value="{{ patient['hypertension'] if patient else '' }}">
+    </div>
+    <div class="col-md-3 mb-3">
+      <label class="form-label">Ever Married</label>
+      <input class="form-control" name="ever_married" value="{{ patient['ever_married'] if patient else '' }}">
+    </div>
+    <div class="col-md-3 mb-3">
+      <label class="form-label">Work Type</label>
+      <input class="form-control" name="work_type" value="{{ patient['work_type'] if patient else '' }}">
+    </div>
+    <div class="col-md-3 mb-3">
+      <label class="form-label">Residence Type</label>
+      <input class="form-control" name="Residence_type" value="{{ patient['Residence_type'] if patient else '' }}">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4 mb-3">
+      <label class="form-label">Avg Glucose Level</label>
+      <input class="form-control" name="avg_glucose_level" value="{{ patient['avg_glucose_level'] if patient else '' }}">
+    </div>
+    <div class="col-md-4 mb-3">
+      <label class="form-label">BMI</label>
+      <input class="form-control" name="bmi" value="{{ patient['bmi'] if patient else '' }}">
+    </div>
+    <div class="col-md-4 mb-3">
+      <label class="form-label">Smoking Status</label>
+      <input class="form-control" name="smoking_status" value="{{ patient['smoking_status'] if patient else '' }}">
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Stroke (0/1)</label>
+    <input class="form-control" name="stroke" value="{{ patient['stroke'] if patient else '' }}">
+  </div>
+
+  <div class="d-flex gap-2">
+    <button class="btn btn-success">{{ action if action is defined else 'Save' }}</button>
+    {% if cancel_url is defined %}
+      <a href="{{ cancel_url }}" class="btn btn-outline-secondary">Cancel</a>
+    {% endif %}
+  </div>
+</form>

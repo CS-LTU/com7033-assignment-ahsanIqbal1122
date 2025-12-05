@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+	.pd-hero { margin-bottom: 20px; }
+	.report-card { margin-bottom: 18px; }
+	.chart-wrap { background: white; padding: 18px; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.04); }
+	.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+	@media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } }
+</style>
+
+<div class="pd-hero">
+	<h2>Patient Dashboard</h2>
+	<p class="text-muted">Fill your health metrics below to save reports and view analysis over time.</p>
+</div>
+
+
+<div class="row">
+	<div class="col-lg-5">
+
+		<div class="card report-card mb-3">
+			<div class="card-body">
+				{% if edit_report %}
+					<h5 class="card-title">Edit Health Report</h5>
+					{% include 'patient_form.html' %}
+				{% else %}
+					<h5 class="card-title">Submit Health Report</h5>
+					{% include 'patient_form.html' %}
+				{% endif %}
+			</div>
+		</div>
+
+		<div class="card">
+			<div class="card-body">
+				<h5 class="card-title">Recent Reports</h5>
+				{% if reports %}
+					<ul class="list-group list-group-flush">
+						{% for r in reports|reverse %}
+							<li class="list-group-item d-flex justify-content-between align-items-center">
+								<div>
+									<div><strong>{{ r['created_at'] }}</strong></div>
+									<div class="small text-muted">Gender: {{ r['gender'] or '-' }} • Age: {{ r['age'] or '-' }} • HT: {{ r['hypertension'] }} • Glucose: {{ r['avg_glucose_level'] or '-' }} • BMI: {{ r['bmi'] or '-' }} • Smoking: {{ r['smoking_status'] or '-' }} • Stroke: {{ r['stroke'] }}</div>
+								</div>
+								<div>
+									<a href="{{ url_for('dashboard.edit_patient_report', report_id=r['id']) }}" class="btn btn-sm btn-outline-warning me-1">Edit</a>
+									<form action="{{ url_for('dashboard.delete_patient_report', report_id=r['id']) }}" method="post" style="display:inline">
+										<button class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this report?');">Delete</button>
+									</form>
+								</div>
+							</li>
+						{% endfor %}
+					</ul>
+				{% else %}
+					<div class="text-muted">No reports yet.</div>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+
+	<div class="col-lg-7">
+		<div class="chart-wrap">
+			<h5>Health Trend & Risk Score</h5>
+			<canvas id="riskChart" width="600" height="300"></canvas>
+		</div>
+	</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+	const labels = {{ labels | tojson | safe }};
+	const scores = {{ scores | tojson | safe }};
+	const ages = {{ ages | tojson | safe }};
+	const glucoses = {{ glucoses | tojson | safe }};
+	const bmis = {{ bmis | tojson | safe }};
+
+	const ctx = document.getElementById('riskChart').getContext('2d');
+	const riskChart = new Chart(ctx, {
+		type: 'line',
+		data: {
+			labels: labels,
+			datasets: [
+				{
+					label: 'Risk Score',
+					data: scores,
+					borderColor: '#ef4444',
+					backgroundColor: 'rgba(239,68,68,0.08)',
+					yAxisID: 'y',
+					tension: 0.3,
+					pointRadius: 4,
+					pointBackgroundColor: '#ef4444'
+				},
+				{
+					label: 'Avg Glucose',
+					data: glucoses,
+					borderColor: '#60a5fa',
+					backgroundColor: 'rgba(96,165,250,0.06)',
+					yAxisID: 'y1',
+					tension: 0.3,
+					pointRadius: 3
+				},
+				{
+					label: 'BMI',
+					data: bmis,
+					borderColor: '#a78bfa',
+					backgroundColor: 'rgba(167,139,250,0.06)',
+					yAxisID: 'y1',
+					tension: 0.3,
+					pointRadius: 3
+				}
+			]
+		},
+		options: {
+			interaction: { mode: 'index', intersect: false },
+			stacked: false,
+			scales: {
+				y: { type: 'linear', display: true, position: 'left', min: 0, max: 100, title: { display: true, text: 'Risk %' } },
+				y1: { type: 'linear', display: true, position: 'right', grid: { drawOnChartArea: false }, title: { display: true, text: 'Glucose / BMI' } }
+			}
+		}
+	});
+</script>
+
+{% endblock %}

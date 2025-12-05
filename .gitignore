@@ -1,0 +1,64 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Flask
+instance/stroke.db
+instance/*.db
+instance/*.db-journal
+instance/*.csv
+.env
+.flaskenv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Temporary files
+*.bak
+*.tmp
+temp/
+tmp/
+
+# Debug scripts (optional - you can remove these lines if you want to include them)
+check_db.py
+test_login.py
+test_all_logins.py
+debug_login.py
+create_admin.py
+create_test_users.py
+import_dataset.py

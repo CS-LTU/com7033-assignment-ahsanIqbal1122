@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+  .admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+  }
+
+  .users-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .users-table th {
+    background: #f3f4f6;
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    color: #0f172a;
+    border-bottom: 2px solid #e5e7eb;
+  }
+  .users-table td {
+    padding: 12px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .role-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  .role-admin {
+    background: #fef3c7;
+    color: #92400e;
+  }
+  .role-doctor {
+    background: #dbeafe;
+    color: #1e40af;
+  }
+  .role-patient {
+    background: #dcfce7;
+    color: #166534;
+  }
+</style>
+
+<div class="admin-header">
+  <div>
+    <h3 class="mb-0">User Management</h3>
+    <div class="small-muted">Approve pending registrations and manage users</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="table-responsive">
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Full Name</th>
+          <th>Role</th>
+          <th>Email</th>
+          <th>ID/License</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+          <tr>
+            <td><strong>{{ user['username'] }}</strong></td>
+            <td>{{ user['full_name'] or '—' }}</td>
+            <td>
+              <span class="role-badge role-{{ user['role'] }}">
+                {{ user['role'].capitalize() }}
+              </span>
+            </td>
+            <td>{{ user['email'] or '—' }}</td>
+            <td>
+              {% if user['role'] == 'doctor' %}
+                {{ user['license_number'] or '—' }}
+              {% elif user['role'] == 'patient' %}
+                {{ user['patient_id'] or '—' }}
+              {% else %}
+                —
+              {% endif %}
+            </td>
+            <td>
+              {% if user['approved'] == 0 %}
+                <!-- Approve form (admin can assign IDs) -->
+                <form action="{{ url_for('dashboard.approve_user', user_id=user['id']) }}" method="post" style="display:inline-block;margin-right:6px;">
+                  {% if user['role'] == 'doctor' %}
+                    <input class="form-control form-control-sm" type="text" name="hospital_id" placeholder="Hospital ID" style="display:inline-block;width:120px;margin-right:6px;">
+                    <input class="form-control form-control-sm" type="text" name="license_number" placeholder="License#" style="display:inline-block;width:120px;margin-right:6px;">
+                  {% elif user['role'] == 'patient' %}
+                    <input class="form-control form-control-sm" type="text" name="patient_id" placeholder="Patient ID" style="display:inline-block;width:160px;margin-right:6px;">
+                  {% endif %}
+                  <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                </form>
+                <form action="{{ url_for('dashboard.delete_user', user_id=user['id']) }}" method="post" style="display:inline">
+                  <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this user?')">Delete</button>
+                </form>
+              {% else %}
+                <span class="small-muted">Approved</span>
+                <form action="{{ url_for('dashboard.delete_user', user_id=user['id']) }}" method="post" style="display:inline;margin-left:8px;">
+                  <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this user?')">Delete</button>
+                </form>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

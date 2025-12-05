@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Patient Details — ID {{ patient['id'] }}</h3>
+<div class="row mt-3">
+  <div class="col-md-6">
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Demographics</h5>
+        <p><strong>Gender:</strong> {{ patient['gender'] }}</p>
+        <p><strong>Age:</strong> {{ patient['age'] }}</p>
+        <p><strong>Hypertension:</strong> {% if patient['hypertension'] == 1 %}<span class="badge bg-warning">Yes</span>{% else %}No{% endif %}</p>
+        <p><strong>Heart Disease:</strong> {% if patient['heart_disease'] == 1 %}<span class="badge bg-danger">Yes</span>{% else %}No{% endif %}</p>
+        <p><strong>Ever Married:</strong> {{ patient['ever_married'] }}</p>
+        <p><strong>Work Type:</strong> {{ patient['work_type'] }}</p>
+        <p><strong>Residence:</strong> {{ patient['Residence_type'] }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Health Metrics</h5>
+        <p><strong>Avg Glucose Level:</strong> {{ patient['avg_glucose_level'] }}</p>
+        <p><strong>BMI:</strong> {{ patient['bmi'] }}</p>
+        <p><strong>Smoking Status:</strong> {{ patient['smoking_status'] }}</p>
+        <p><strong>Stroke:</strong> {% if patient['stroke'] == 1 %}<span class="badge bg-danger">Yes</span>{% else %}<span class="badge bg-secondary">No</span>{% endif %}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card mt-3">
+  <div class="card-body">
+    <h5 class="card-title">Linked User Accounts</h5>
+    {% if users and users|length > 0 %}
+      <ul class="list-group list-group-flush">
+        {% for u in users %}
+          <li class="list-group-item">{{ u['full_name'] or u['username'] }} — <small class="text-muted">{{ u['email'] }}</small></li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="text-muted">No registered users linked to this patient.</div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="card mt-3">
+  <div class="card-body">
+    <h5 class="card-title">Reports</h5>
+    {% if reports and reports|length > 0 %}
+      <div class="table-responsive">
+      <table class="table table-sm">
+        <thead><tr><th>Date</th><th>User</th><th>Age</th><th>Glucose</th><th>BMI</th><th>Stroke</th></tr></thead>
+        <tbody>
+        {% for r in reports %}
+          <tr>
+            <td>{{ r['created_at'] }}</td>
+            <td>{{ r['username'] or '—' }}</td>
+            <td>{{ r['age'] }}</td>
+            <td>{{ r['avg_glucose_level'] }}</td>
+            <td>{{ r['bmi'] }}</td>
+            <td>{% if r['stroke'] == 1 %}<span class="badge bg-danger">Yes</span>{% else %}No{% endif %}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      </div>
+    {% else %}
+      <div class="text-muted">No reports available for linked users.</div>
+    {% endif %}
+  </div>
+</div>
+
+<a href="{{ url_for('dashboard.doctor_dashboard') }}" class="btn btn-outline-secondary mt-3">Back</a>
+{% endblock %}

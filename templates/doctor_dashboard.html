@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="text-center fw-bold mb-3">👨‍⚕️ Doctor Dashboard</h2>
+
+<p>Welcome Dr. {{ session['username'] }}</p>
+
+<div class="card mb-3">
+  <div class="card-body">
+    <h5 class="card-title">Dataset Statistics</h5>
+    <p><strong>Total Patients in Database:</strong> {{ patients|length }}</p>
+    <p><strong>Patients with Stroke:</strong> <span class="badge bg-danger">{{ stroke_count }}</span></p>
+  </div>
+</div>
+
+<div class="mt-3">
+<a href="{{ url_for('patients.list_patients') }}" class="btn btn-primary me-2">View All Patients</a>
+<a href="{{ url_for('patients.add_patient') }}" class="btn btn-success me-2">Add Patient</a>
+<a href="{{ url_for('dashboard.doctor_smoking_graph') }}" class="btn btn-info">Smoking Analysis Graph</a>
+</div>
+
+<hr>
+
+<h4 class="mt-4">Recent Patients (Latest 200)</h4>
+{% if patients and patients|length > 0 %}
+<div class="table-responsive">
+<table class="table table-sm table-striped mt-2">
+<thead>
+<tr>
+<th>ID</th><th>Gender</th><th>Age</th><th>Hypertension</th><th>Heart Disease</th><th>Glucose</th><th>BMI</th><th>Smoking</th><th>Stroke</th><th>Actions</th>
+</tr>
+</thead>
+<tbody>
+{% for p in patients %}
+<tr>
+<td>{{ p['id'] }}</td>
+<td>{{ p['gender'] }}</td>
+<td>{{ p['age'] }}</td>
+<td>{% if p['hypertension'] == 1 %}<span class="badge bg-warning text-dark">Yes</span>{% else %}—{% endif %}</td>
+<td>{% if p['heart_disease'] == 1 %}<span class="badge bg-danger">Yes</span>{% else %}—{% endif %}</td>
+<td>{{ p['avg_glucose_level'] }}</td>
+<td>{{ p['bmi'] }}</td>
+<td>{{ p['smoking_status'] }}</td>
+<td>{% if p['stroke'] == 1 %}<span class="badge bg-danger">Stroke</span>{% else %}<span class="badge bg-success">No</span>{% endif %}</td>
+<td>
+  <a href="{{ url_for('dashboard.doctor_view_patient', pid=p['id']) }}" class="btn btn-sm btn-outline-primary">View</a>
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+{% else %}
+<p class="text-muted">No stroke patients found.</p>
+{% endif %}
+{% endblock %}

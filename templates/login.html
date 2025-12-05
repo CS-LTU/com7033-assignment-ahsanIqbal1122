@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+  .login-hero {
+    min-height: 68vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #3b82f6 100%);
+    color: #fff;
+    border-radius: 12px;
+    padding: 40px 20px;
+    margin: -20px -20px 20px -20px;
+  }
+  .login-card {
+    max-width: 920px;
+    width: 100%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.95));
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(2,6,23,0.6);
+    overflow: hidden;
+    display: flex;
+  }
+  .login-side {
+    flex: 1 1 45%;
+    padding: 36px;
+    background: linear-gradient(180deg, #0ea5e9, #7c3aed);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 12px;
+  }
+  .login-side h3 { margin: 0; font-weight:800; font-size:1.5rem; }
+  .login-side p { opacity:0.95; margin:0 }
+
+  .login-form-wrap { flex: 1 1 55%; padding: 28px 36px; }
+  .brand-logo { font-weight:900; font-size:1.05rem; color:#0f172a; }
+  .form-input { margin-bottom: 14px; }
+  .form-input label { font-weight:700; font-size:0.9rem; color:#374151 }
+  .btn-login { background: linear-gradient(90deg,#0ea5e9,#7c3aed); border: none; color: white; padding: 12px 16px; font-weight:700; border-radius: 10px; width:100%; }
+  .muted-row { font-size:0.9rem; color:#6b7280; display:flex; justify-content:space-between; align-items:center; }
+  .password-toggle { position: relative; }
+  .toggle-btn { position: absolute; right: 10px; top: 32px; background: none; border: none; color:#6b7280; cursor:pointer; }
+
+  @media (max-width: 768px) {
+    .login-card { flex-direction: column; }
+    .login-side { display:none; }
+  }
+</style>
+
+<div class="login-hero">
+  <div class="login-card">
+    <div class="login-side">
+      <div class="brand-logo">💡 SIS</div>
+      <h3>Welcome to Stroke Intelligence</h3>
+      <p>Secure portal for doctors, patients, and admins — manage records, approvals, and clinical insights.</p>
+      <ul style="list-style:none;padding-left:0;margin-top:12px;opacity:0.95">
+        <li>• Fast patient lookup</li>
+        <li>• Secure approval workflow</li>
+        <li>• Clean dashboards</li>
+      </ul>
+    </div>
+
+    <div class="login-form-wrap">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0">Sign In</h4>
+      
+      </div>
+
+      <form method="post">
+        <div class="form-input">
+          <label for="username">Username</label>
+          <input id="username" name="username" type="text" class="form-control" placeholder="Your username" required>
+        </div>
+
+        <div class="form-input password-toggle">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" class="form-control" placeholder="Your password" required>
+          <button type="button" class="toggle-btn" onclick="togglePassword(event)">Show</button>
+        </div>
+
+        <div class="form-input muted-row mb-3">
+          <div><input type="checkbox" id="remember" name="remember"> <label for="remember"> Remember me</label></div>
+          <div><a href="#">Forgot?</a></div>
+        </div>
+
+        <button class="btn-login mb-3" type="submit">Login</button>
+
+        <div class="text-center small-muted">Or sign in with</div>
+        <div class="d-flex gap-2 mt-2">
+          <a class="btn btn-outline-secondary w-100" href="#">Google</a>
+          <a class="btn btn-outline-secondary w-100" href="#">GitHub</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  function togglePassword(e) {
+    const p = document.getElementById('password');
+    const btn = e.currentTarget || e.target;
+    if (p.type === 'password') { p.type = 'text'; btn.innerText = 'Hide'; }
+    else { p.type = 'password'; btn.innerText = 'Show'; }
+  }
+</script>
+
+{% endblock %}

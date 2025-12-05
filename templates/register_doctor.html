@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="text-center mb-4">
+      <h2 class="hero-title">Doctor Registration</h2>
+      <p class="small-muted">Register as a healthcare provider. Registrations require administrator approval before activation.</p>
+    </div>
+
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <form method="post" action="{{ url_for('auth.register_doctor') }}">
+          <input type="hidden" name="role" value="doctor">
+
+          <div class="row g-2">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">First Name *</label>
+              <input class="form-control" type="text" name="first_name" id="first-name" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Last Name *</label>
+              <input class="form-control" type="text" name="last_name" id="last-name" required>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Department *</label>
+            <input class="form-control" type="text" name="department" id="department">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Medical License Number *</label>
+            <input class="form-control" type="text" name="license_number" id="license_id" required>
+            <div class="form-text">Hospital/organization ID will be assigned by an administrator upon approval.</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Address</label>
+            <input class="form-control" type="text" name="address" id="address">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Mobile</label>
+            <input class="form-control" type="text" name="mobile" id="mobile">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Email *</label>
+            <input class="form-control" type="email" name="email" required>
+          </div>
+
+          <div class="row g-2">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Username *</label>
+              <input class="form-control" type="text" name="username" id="username" required>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Password *</label>
+              <input class="form-control" type="password" name="password" id="password" required>
+            </div>
+          </div>
+
+          <button class="btn btn-primary w-100">Register as Doctor</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

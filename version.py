@@ -1,0 +1,6 @@
+VERSION = "1.0.0"
+RELEASE_DATE = "2025-12-05"
+AUTHOR = "Ahsan Iqbal"
+STUDENT_ID = "1122"
+INSTITUTION = "Leeds Trinity University"
+COURSE = "COM7033"
