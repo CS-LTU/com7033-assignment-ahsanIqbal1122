@@ -4,6 +4,7 @@ from database.db import init_db, import_csv_if_needed
 from routes.auth_routes import auth_bp
 from routes.patient_routes import patients_bp
 from routes.dashboard_routes import dashboard_bp
+from routes.mongo_patient_routes import mongo_patients_bp
 from version import VERSION, RELEASE_DATE
 import os
 
@@ -28,6 +29,7 @@ import_csv_if_needed()
 app.register_blueprint(auth_bp)
 app.register_blueprint(patients_bp)
 app.register_blueprint(dashboard_bp)
+app.register_blueprint(mongo_patients_bp)
 
 
 if __name__ == "__main__":
