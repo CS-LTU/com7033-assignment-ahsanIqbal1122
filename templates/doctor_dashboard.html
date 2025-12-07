@@ -20,6 +20,67 @@
 
 <hr>
 
+<!-- Patient Reports Section -->
+<h4 class="mt-4 mb-3">📋 Patient Health Reports (from Patients)</h4>
+{% if patient_reports and patient_reports|length > 0 %}
+<div class="table-responsive">
+<table class="table table-sm table-striped">
+  <thead class="table-light">
+    <tr>
+      <th>Patient Username</th><th>Patient Name</th><th>Gender</th><th>Age</th><th>Hypertension</th>
+      <th>Glucose</th><th>BMI</th><th>Smoking</th><th>Stroke</th><th>Submitted</th><th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for report in patient_reports %}
+    <tr>
+      <td>{{ report['username'] }}</td>
+      <td>{{ report['full_name'] }}</td>
+      <td>{{ report['gender'] or '-' }}</td>
+      <td>{{ report['age'] or '-' }}</td>
+      <td>{% if report['hypertension'] == 1 %}<span class="badge bg-warning text-dark">Yes</span>{% else %}—{% endif %}</td>
+      <td>{{ report['avg_glucose_level'] or '-' }}</td>
+      <td>{{ report['bmi'] or '-' }}</td>
+      <td>{{ report['smoking_status'] or '-' }}</td>
+      <td>{% if report['stroke'] == 1 %}<span class="badge bg-danger">Yes</span>{% else %}<span class="badge bg-secondary">No</span>{% endif %}</td>
+      <td><small>{{ report['created_at'] }}</small></td>
+      <td>
+        <a href="{{ url_for('dashboard.edit_patient_report', report_id=report['id']) }}" class="btn btn-sm btn-outline-warning" title="Edit Report">Edit</a>
+        <form action="{{ url_for('dashboard.delete_patient_report', report_id=report['id']) }}" method="post" style="display:inline;">
+          <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this report?');" title="Delete Report">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+<p class="text-muted">No patient reports submitted yet.</p>
+{% endif %}
+
+<hr>
+
+<!-- Search Section -->
+<h4 class="mt-4 mb-3">🔍 Search Patients by ID</h4>
+<form method="get" class="mb-3">
+  <div class="input-group">
+    <input type="text" name="search" class="form-control" placeholder="Enter patient ID..." value="{{ search_query }}">
+    <button class="btn btn-primary" type="submit">Search</button>
+    {% if is_search %}
+    <a href="{{ url_for('dashboard.doctor_dashboard') }}" class="btn btn-secondary">Clear</a>
+    {% endif %}
+  </div>
+</form>
+
+{% if is_search %}
+  {% if patients and patients|length > 0 %}
+  <p class="text-success">✓ Found {{ patients|length }} patient(s)</p>
+  {% else %}
+  <p class="text-danger">✗ No patient found with ID: {{ search_query }}</p>
+  {% endif %}
+{% endif %}
+
 <h4 class="mt-4">Recent Patients (Latest 200)</h4>
 {% if patients and patients|length > 0 %}
 <div class="table-responsive">
@@ -50,6 +111,6 @@
 </table>
 </div>
 {% else %}
-<p class="text-muted">No stroke patients found.</p>
+<p class="text-muted">No patients found.</p>
 {% endif %}
 {% endblock %}
