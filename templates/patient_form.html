@@ -9,7 +9,12 @@
     {% endif %}
     <div class="col-md-4 mb-3">
       <label class="form-label">Gender</label>
-      <input class="form-control" name="gender" value="{{ patient['gender'] if patient else '' }}">
+      <select class="form-select" name="gender" required>
+        <option value="">Select</option>
+        <option value="Male" {% if patient and patient['gender']=='Male' %}selected{% endif %}>Male</option>
+        <option value="Female" {% if patient and patient['gender']=='Female' %}selected{% endif %}>Female</option>
+        <option value="Other" {% if patient and patient['gender']=='Other' %}selected{% endif %}>Other</option>
+      </select>
     </div>
     <div class="col-md-4 mb-3">
       <label class="form-label">Age</label>
@@ -24,15 +29,30 @@
     </div>
     <div class="col-md-3 mb-3">
       <label class="form-label">Ever Married</label>
-      <input class="form-control" name="ever_married" value="{{ patient['ever_married'] if patient else '' }}">
+      <select class="form-select" name="ever_married" required>
+        <option value="">Select</option>
+        <option value="Yes" {% if patient and patient['ever_married']=='Yes' %}selected{% endif %}>Yes</option>
+        <option value="No" {% if patient and patient['ever_married']=='No' %}selected{% endif %}>No</option>
+      </select>
     </div>
     <div class="col-md-3 mb-3">
       <label class="form-label">Work Type</label>
-      <input class="form-control" name="work_type" value="{{ patient['work_type'] if patient else '' }}">
+      <select class="form-select" name="work_type" required>
+        <option value="">Select</option>
+        <option value="Children" {% if patient and patient['work_type']=='Children' %}selected{% endif %}>Children</option>
+        <option value="Govt_job" {% if patient and patient['work_type']=='Govt_job' %}selected{% endif %}>Govt_job</option>
+        <option value="Never_worked" {% if patient and patient['work_type']=='Never_worked' %}selected{% endif %}>Never_worked</option>
+        <option value="Private" {% if patient and patient['work_type']=='Private' %}selected{% endif %}>Private</option>
+        <option value="Self-employed" {% if patient and patient['work_type']=='Self-employed' %}selected{% endif %}>Self-employed</option>
+      </select>
     </div>
     <div class="col-md-3 mb-3">
       <label class="form-label">Residence Type</label>
-      <input class="form-control" name="Residence_type" value="{{ patient['Residence_type'] if patient else '' }}">
+      <select class="form-select" name="Residence_type" required>
+        <option value="">Select</option>
+        <option value="Urban" {% if patient and patient['Residence_type']=='Urban' %}selected{% endif %}>Urban</option>
+        <option value="Rural" {% if patient and patient['Residence_type']=='Rural' %}selected{% endif %}>Rural</option>
+      </select>
     </div>
   </div>
 
@@ -52,8 +72,12 @@
   </div>
 
   <div class="mb-3">
-    <label class="form-label">Stroke (0/1)</label>
-    <input class="form-control" name="stroke" value="{{ patient['stroke'] if patient else '' }}">
+     <label class="form-label">Stroke (0/1)</label>
+     <select class="form-select" name="stroke" required>
+      <option value="">Select</option>
+      <option value="0" {% if patient and patient['stroke']==0 %}selected{% endif %}>No</option>
+      <option value="1" {% if patient and patient['stroke']==1 %}selected{% endif %}>Yes</option>
+     </select>
   </div>
 
   <div class="d-flex gap-2">

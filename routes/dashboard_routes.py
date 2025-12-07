@@ -275,21 +275,56 @@ def delete_user(user_id):
     return redirect(url_for("dashboard.admin_dashboard"))
 
 # -------- DOCTOR DASHBOARD --------
-@dashboard_bp.route("/doctor/dashboard")
+@dashboard_bp.route("/doctor/dashboard", methods=["GET", "POST"])
 @role_required("doctor")
 def doctor_dashboard():
-    # Show all patients from the Kaggle dataset
+    # Get search query from form or URL parameter
+    search_query = request.args.get("search", "").strip()
+    
     conn = get_db()
     cur = conn.cursor()
-    cur.execute("SELECT * FROM patients ORDER BY id DESC LIMIT 200;")
-    all_patients = cur.fetchall()
+    
+    # Fetch patient reports added by patients (linked via users)
+    cur.execute("""
+        SELECT pr.id, pr.user_id, pr.age, pr.gender, pr.hypertension, pr.ever_married, 
+               pr.work_type, pr.Residence_type, pr.avg_glucose_level, pr.bmi, 
+               pr.smoking_status, pr.stroke, pr.created_at, u.username, u.full_name
+        FROM patient_reports pr
+        JOIN users u ON pr.user_id = u.id
+        ORDER BY pr.created_at DESC
+        LIMIT 50
+    """)
+    patient_reports = cur.fetchall()
+    
+    # Search patients by ID if search query provided
+    if search_query:
+        try:
+            search_id = int(search_query)
+            cur.execute("SELECT * FROM patients WHERE id = ?;", (search_id,))
+            search_results = cur.fetchall()
+        except ValueError:
+            search_results = []
+    else:
+        search_results = None
+    
+    # Show all patients from Kaggle dataset (with limit if no search)
+    if search_results is None:
+        cur.execute("SELECT * FROM patients ORDER BY id DESC LIMIT 200;")
+        all_patients = cur.fetchall()
+    else:
+        all_patients = search_results if search_results else []
     
     # Count stroke patients for statistics
     cur.execute("SELECT COUNT(*) FROM patients WHERE stroke=1")
     stroke_count = cur.fetchone()[0]
     
     conn.close()
-    return render_template("doctor_dashboard.html", patients=all_patients, stroke_count=stroke_count)
+    return render_template("doctor_dashboard.html", 
+                         patients=all_patients, 
+                         stroke_count=stroke_count,
+                         patient_reports=patient_reports,
+                         search_query=search_query,
+                         is_search=search_results is not None)
 
 
 # Doctor: view a single patient and any linked user accounts/reports
@@ -505,17 +540,28 @@ def patient_dashboard():
     # Build data for chart: reverse to chronological
     rows_chrono = list(reversed(rows))
     labels = [r['created_at'] for r in rows_chrono]
-    ages = [r['age'] or 0 for r in rows_chrono]
-    glucoses = [r['avg_glucose_level'] or 0 for r in rows_chrono]
-    bmis = [r['bmi'] or 0 for r in rows_chrono]
+    def safe_float(val):
+        try:
+            return float(val)
+        except (TypeError, ValueError):
+            return 0.0
+    ages = [safe_float(r['age']) for r in rows_chrono]
+    glucoses = [safe_float(r['avg_glucose_level']) for r in rows_chrono]
+    bmis = [safe_float(r['bmi']) for r in rows_chrono]
 
     # Compute a simple risk score for visualization (0-100)
     scores = []
     for r in rows_chrono:
-        age_v = (r[1] or 0)
-        hyp = (r[2] or 0)
-        glu = (r[3] or 0)
-        bmi_v = (r[4] or 0)
+        try:
+            age_v = safe_float(r['age'] if r['age'] is not None else 0)
+            hyp = int(r['hypertension']) if r['hypertension'] is not None else 0
+            glu = safe_float(r['avg_glucose_level'] if r['avg_glucose_level'] is not None else 0)
+            bmi_v = safe_float(r['bmi'] if r['bmi'] is not None else 0)
+        except (KeyError, TypeError, ValueError):
+            age_v = 0
+            hyp = 0
+            glu = 0
+            bmi_v = 0
         # Simple heuristic: age, hypertension, glucose, bmi
         score = 0
         score += min(age_v / 100.0, 1.0) * 0.4
