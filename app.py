@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_wtf.csrf import CSRFProtect
 from config import SECRET_KEY, DATABASE_PATH
 from database.db import init_db, import_csv_if_needed
 from routes.auth_routes import auth_bp
@@ -11,6 +12,9 @@ import os
 
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
+
+# Enable CSRF protection for all forms
+csrf = CSRFProtect(app)
 
 # Add version info to app context
 app.config['VERSION'] = VERSION
