@@ -54,6 +54,50 @@ htmlcov/
 temp/
 tmp/
 
+# Database files
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# Sensitive configuration
+.env
+.env.local
+.env.*.local
+config_local.py
+secrets.py
+
+# Generated documentation
+site/
+docs/_build/
+
+# Coverage reports
+coverage.xml
+*.cover
+.hypothesis/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# Certificates and keys
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+
+# OS files
+Thumbs.db
+Desktop.ini
+
+# Backup files
+*~
+*.backup
+*.old
+
 # Debug scripts (optional - you can remove these lines if you want to include them)
 check_db.py
 test_login.py
