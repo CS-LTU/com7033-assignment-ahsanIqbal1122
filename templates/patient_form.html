@@ -1,5 +1,6 @@
 
 <form method="post" action="{{ form_action if form_action is defined else '' }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
   <div class="row">
     {% if show_id is not defined or show_id %}
     <div class="col-md-4 mb-3">

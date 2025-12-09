@@ -3,6 +3,7 @@
 <div class="container mt-4">
   <h3>{{ action }} MongoDB Patient</h3>
   <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
     <div class="row g-3">
       <div class="col-md-3">
         <label class="form-label">Gender</label>

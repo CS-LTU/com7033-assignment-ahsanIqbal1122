@@ -10,6 +10,7 @@
     <div class="card shadow-sm">
       <div class="card-body p-4">
         <form method="post" action="{{ url_for('auth.register_patient') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
           <input type="hidden" name="role" value="patient">
 
           <div class="row g-2">

@@ -69,6 +69,7 @@
       </div>
 
       <form method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
         <div class="form-input">
           <label for="username">Username</label>
           <input id="username" name="username" type="text" class="form-control" placeholder="Your username" required>
