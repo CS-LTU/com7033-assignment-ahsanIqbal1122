@@ -90,6 +90,7 @@
               {% if user['approved'] == 0 %}
                 <!-- Approve form (admin can assign IDs) -->
                 <form action="{{ url_for('dashboard.approve_user', user_id=user['id']) }}" method="post" style="display:inline-block;margin-right:6px;">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                   {% if user['role'] == 'doctor' %}
                     <input class="form-control form-control-sm" type="text" name="hospital_id" placeholder="Hospital ID" style="display:inline-block;width:120px;margin-right:6px;">
                     <input class="form-control form-control-sm" type="text" name="license_number" placeholder="License#" style="display:inline-block;width:120px;margin-right:6px;">
@@ -99,11 +100,13 @@
                   <button type="submit" class="btn btn-sm btn-success">Approve</button>
                 </form>
                 <form action="{{ url_for('dashboard.delete_user', user_id=user['id']) }}" method="post" style="display:inline">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                   <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this user?')">Delete</button>
                 </form>
               {% else %}
                 <span class="small-muted">Approved</span>
                 <form action="{{ url_for('dashboard.delete_user', user_id=user['id']) }}" method="post" style="display:inline;margin-left:8px;">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                   <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this user?')">Delete</button>
                 </form>
               {% endif %}

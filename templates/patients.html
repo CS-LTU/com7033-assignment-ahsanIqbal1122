@@ -43,6 +43,7 @@
         <td>
           <a href="{{ url_for('patients.edit_patient', pid=p['id']) }}" class="btn btn-sm btn-outline-warning me-1">Edit</a>
           <form action="{{ url_for('patients.delete_patient', pid=p['id']) }}" method="post" style="display:inline">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this patient?');">Delete</button>
           </form>
         </td>
