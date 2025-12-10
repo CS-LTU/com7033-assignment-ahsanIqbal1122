@@ -29,18 +29,54 @@ def role_required(role):
         return wrapper
     return decorator
 
+def roles_required(*roles):
+    """
+    Decorator that allows multiple roles to access a route.
+    Usage: @roles_required("patient", "doctor")
+    """
+    def decorator(f):
+        @wraps(f)
+        def wrapper(*args, **kwargs):
+            if "role" not in session:
+                flash("Please log in first.", "warning")
+                return redirect(url_for("auth.login"))
+            if session["role"] not in roles:
+                flash(f"Access denied. You are logged in as a {session['role']}.", "danger")
+                # Redirect to appropriate dashboard based on user's actual role
+                if session["role"] == "admin":
+                    return redirect(url_for("dashboard.admin_dashboard"))
+                elif session["role"] == "doctor":
+                    return redirect(url_for("dashboard.doctor_dashboard"))
+                elif session["role"] == "patient":
+                    return redirect(url_for("dashboard.patient_dashboard"))
+                else:
+                    return redirect(url_for("auth.login"))
+            return f(*args, **kwargs)
+        return wrapper
+    return decorator
+
 # -------- PATIENT REPORT EDIT/DELETE --------
 @dashboard_bp.route("/patient/reports/<int:report_id>/edit", methods=["GET", "POST"])
-@role_required("patient")
+@roles_required("patient", "doctor")
 def edit_patient_report(report_id):
     user_id = session.get("user_id")
+    user_role = session.get("role")
     conn = get_db()
     cur = conn.cursor()
-    cur.execute("SELECT * FROM patient_reports WHERE id = ? AND user_id = ?", (report_id, user_id))
+    
+    # Patients can only edit their own reports, doctors can edit any report
+    if user_role == "patient":
+        cur.execute("SELECT * FROM patient_reports WHERE id = ? AND user_id = ?", (report_id, user_id))
+    else:  # doctor
+        cur.execute("SELECT * FROM patient_reports WHERE id = ?", (report_id,))
+    
     report = cur.fetchone()
     if not report:
         conn.close()
         flash("Report not found or access denied.", "danger")
+        # Redirect based on user role
+        if user_role == "doctor":
+            return redirect(url_for("dashboard.doctor_dashboard"))
         return redirect(url_for("dashboard.patient_dashboard"))
 
     if request.method == "POST":
@@ -99,29 +135,52 @@ def edit_patient_report(report_id):
             flash('Invalid stroke value.', 'danger')
             return redirect(url_for('dashboard.edit_patient_report', report_id=report_id))
 
-        cur.execute(
-            """UPDATE patient_reports SET age=?, gender=?, hypertension=?, ever_married=?, work_type=?, Residence_type=?, avg_glucose_level=?, bmi=?, smoking_status=?, stroke=? WHERE id=? AND user_id=?""",
-            (age, gender, hypertension, ever_married, work_type, residence, glucose, bmi, smoking_status, stroke, report_id, user_id)
-        )
+        # Patients can only update their own reports, doctors can update any
+        if user_role == "patient":
+            cur.execute(
+                """UPDATE patient_reports SET age=?, gender=?, hypertension=?, ever_married=?, work_type=?, Residence_type=?, avg_glucose_level=?, bmi=?, smoking_status=?, stroke=? WHERE id=? AND user_id=?""",
+                (age, gender, hypertension, ever_married, work_type, residence, glucose, bmi, smoking_status, stroke, report_id, user_id)
+            )
+        else:  # doctor
+            cur.execute(
+                """UPDATE patient_reports SET age=?, gender=?, hypertension=?, ever_married=?, work_type=?, Residence_type=?, avg_glucose_level=?, bmi=?, smoking_status=?, stroke=? WHERE id=?""",
+                (age, gender, hypertension, ever_married, work_type, residence, glucose, bmi, smoking_status, stroke, report_id)
+            )
         conn.commit()
         conn.close()
         flash("Report updated.", "success")
+        # Redirect based on user role
+        if user_role == "doctor":
+            return redirect(url_for("dashboard.doctor_dashboard"))
         return redirect(url_for("dashboard.patient_dashboard"))
 
     conn.close()
-    return render_template("patient_form.html", action="Edit", patient=report, form_action=url_for('dashboard.edit_patient_report', report_id=report_id), cancel_url=url_for('dashboard.patient_dashboard'), show_id=False)
+    # Set cancel URL based on user role
+    cancel_url = url_for('dashboard.doctor_dashboard') if user_role == "doctor" else url_for('dashboard.patient_dashboard')
+    return render_template("patient_form.html", action="Edit", patient=report, form_action=url_for('dashboard.edit_patient_report', report_id=report_id), cancel_url=cancel_url, show_id=False)
 
 
 @dashboard_bp.route("/patient/reports/<int:report_id>/delete", methods=["POST"])
-@role_required("patient")
+@roles_required("patient", "doctor")
 def delete_patient_report(report_id):
     user_id = session.get("user_id")
+    user_role = session.get("role")
     conn = get_db()
     cur = conn.cursor()
-    cur.execute("DELETE FROM patient_reports WHERE id = ? AND user_id = ?", (report_id, user_id))
+    
+    # Patients can only delete their own reports, doctors can delete any report
+    if user_role == "patient":
+        cur.execute("DELETE FROM patient_reports WHERE id = ? AND user_id = ?", (report_id, user_id))
+    else:  # doctor
+        cur.execute("DELETE FROM patient_reports WHERE id = ?", (report_id,))
+    
     conn.commit()
     conn.close()
     flash("Report deleted.", "info")
+    
+    # Redirect based on user role
+    if user_role == "doctor":
+        return redirect(url_for("dashboard.doctor_dashboard"))
     return redirect(url_for("dashboard.patient_dashboard"))
 
 # (Removed duplicate Blueprint and role_required definitions)
