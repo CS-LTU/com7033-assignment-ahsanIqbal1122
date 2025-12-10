@@ -961,7 +961,7 @@ See the [LICENSE](LICENSE) file for full details.
 
 ## 📧 Contact & Support
 
-**Developer**: Ahsan Iqbal  
+**Developer**: Just Ahsan  
 **Repository**: [CS-LTU/com7033-assignment-ahsanIqbal1122](https://github.com/CS-LTU/com7033-assignment-ahsanIqbal1122)  
 **Course**: COM7033 - Secure Programming Assignment  
 **Institution**: Leeds Trinity University  

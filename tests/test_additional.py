@@ -2,7 +2,7 @@
 Additional comprehensive unit tests for Stroke Pass application.
 Tests cover CSRF protection, session handling, and additional edge cases.
 
-Author: Ahsan Iqbal
+Author: Just Ahsan
 Course: COM7033 - Secure Programming
 Institution: Leeds Trinity University
 """

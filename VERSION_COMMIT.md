@@ -20,7 +20,7 @@ cd C:\Users\User\Desktop\stroke_pass_app
 ### 2. Initialize Git (first time only)
 ```powershell
 git init
-git config --global user.name "Ahsan Iqbal"
+git config --global user.name "Just Ahsan"
 git config --global user.email "your.email@example.com"
 git remote add origin https://github.com/CS-LTU/com7033-assignment-ahsanIqbal1122.git
 ```
@@ -36,7 +36,7 @@ git commit -m "v1.0.0: Initial release - Stroke Intelligence System (SIS)
 
 RELEASE: v1.0.0
 DATE: 2025-12-05
-AUTHOR: Ahsan Iqbal
+AUTHOR: Just Ahsan
 STUDENT_ID: 1122
 COURSE: COM7033
 INSTITUTION: Leeds Trinity University

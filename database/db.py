@@ -4,7 +4,7 @@ SQLite Database Management Module
 Handles SQLite database operations for the Stroke Intelligence System.
 Manages user authentication, patient reports, and Kaggle dataset integration.
 
-Author: Ahsan Iqbal
+Author: Just Ahsan
 Course: COM7033 - Secure Programming
 Institution: Leeds Trinity University
 

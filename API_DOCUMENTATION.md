@@ -642,4 +642,4 @@ Planned improvements for future versions:
 
 **Last Updated:** December 9, 2025  
 **API Version:** 1.0.0  
-**Author:** Ahsan Iqbal
+**Author:** Just Ahsan

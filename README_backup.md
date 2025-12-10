@@ -296,7 +296,7 @@ This project is developed as part of COM7033 assignment for educational purposes
 
 ## 👨‍💻 Author
 
-**Ahsan Iqbal**  
+**Just Ahsan**  
 Student ID: 1122  
 Course: COM7033  
 Institution: Leeds Trinity University

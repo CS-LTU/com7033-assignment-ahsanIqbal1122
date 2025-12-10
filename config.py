@@ -4,7 +4,7 @@ Configuration File - Basic Settings
 This file contains basic configuration settings for the Flask application.
 For advanced configuration with environment variables, see config_env.py
 
-Author: Ahsan Iqbal
+Author: Just Ahsan
 Course: COM7033 - Secure Programming
 Institution: Leeds Trinity University
 

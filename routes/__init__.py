@@ -3,7 +3,7 @@ Routes Package
 
 Contains Flask Blueprint modules for the Stroke Intelligence System.
 
-Author: Ahsan Iqbal
+Author: Just Ahsan
 Course: COM7033 - Secure Programming
 Institution: Leeds Trinity University
 

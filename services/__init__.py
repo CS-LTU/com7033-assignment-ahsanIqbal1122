@@ -4,7 +4,7 @@ Services Module
 This module contains business logic services that implement the service layer pattern,
 separating business logic from route handlers for better modularity and testability.
 
-Author: Ahsan Iqbal
+Author: Just Ahsan
 Course: COM7033 - Secure Programming
 Institution: Leeds Trinity University
 """

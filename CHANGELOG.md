@@ -136,7 +136,7 @@ All notable changes to the Stroke Intelligence System (SIS) will be documented i
 ## Version Information
 - **Current Version**: 1.0.0
 - **Release Date**: December 5, 2025
-- **Author**: Ahsan Iqbal
+- **Author**: Just Ahsan
 - **Student ID**: 1122
 - **Course**: COM7033
 - **Institution**: Leeds Trinity University

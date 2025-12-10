@@ -4,7 +4,7 @@ Stroke Pass - Main Application Entry Point
 This is the main Flask application file that initializes and configures the web application.
 It sets up CSRF protection, database connections, and registers all route blueprints.
 
-Author: Ahsan Iqbal
+Author: Just Ahsan
 Course: COM7033 - Secure Programming
 Institution: Leeds Trinity University
 

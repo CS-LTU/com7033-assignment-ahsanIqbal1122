@@ -3,7 +3,7 @@ Patient Routes Module
 
 Handles CRUD operations for the Kaggle stroke prediction dataset (patients table).
 
-Author: Ahsan Iqbal
+Author: Just Ahsan
 Course: COM7033 - Secure Programming
 Institution: Leeds Trinity University
 

@@ -10,7 +10,7 @@ Design Pattern: Service Layer Pattern
 - Handles both SQLite and MongoDB data sources
 - Implements validation and error handling
 
-Author: Ahsan Iqbal
+Author: Just Ahsan
 Course: COM7033 - Secure Programming
 Institution: Leeds Trinity University
 """

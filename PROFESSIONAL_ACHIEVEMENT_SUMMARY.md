@@ -5,7 +5,7 @@
 A professional, enterprise-grade web application demonstrating advanced software engineering practices.
 
 **Course:** COM7033 - Secure Programming  
-**Student:** Ahsan Iqbal  
+**Student:** Just Ahsan  
 **Institution:** Leeds Trinity University  
 **Date:** December 9, 2025
 

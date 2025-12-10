@@ -13,7 +13,7 @@ Design Pattern: Integration Testing
 - Mocks external dependencies (MongoDB)
 - Tests complete user journeys
 
-Author: Ahsan Iqbal
+Author: Just Ahsan
 Course: COM7033 - Secure Programming
 Institution: Leeds Trinity University
 """

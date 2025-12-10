@@ -16,7 +16,7 @@ Security Features:
 - Input validation and sanitization
 - Secure session management
 
-Author: Ahsan Iqbal
+Author: Just Ahsan
 Course: COM7033 - Secure Programming
 Institution: Leeds Trinity University
 """

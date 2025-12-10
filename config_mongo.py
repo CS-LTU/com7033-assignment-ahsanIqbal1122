@@ -4,7 +4,7 @@ MongoDB Configuration
 Configuration settings for MongoDB database connection.
 MongoDB is used for flexible patient record storage with NoSQL schema.
 
-Author: Ahsan Iqbal
+Author: Just Ahsan
 Course: COM7033 - Secure Programming
 Institution: Leeds Trinity University
 

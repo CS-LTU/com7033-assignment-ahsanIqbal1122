@@ -11,7 +11,7 @@ Features:
 - Different log levels (DEBUG, INFO, WARNING, ERROR, CRITICAL)
 - Separate loggers for different modules
 
-Author: Ahsan Iqbal
+Author: Just Ahsan
 Course: COM7033 - Secure Programming
 Institution: Leeds Trinity University
 """

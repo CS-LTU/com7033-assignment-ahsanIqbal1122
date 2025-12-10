@@ -10,7 +10,7 @@ Write-Host ""
 if (-not (Test-Path .git)) {
     Write-Host "Initializing git repository..." -ForegroundColor Yellow
     git init
-    git config user.name "Ahsan Iqbal"
+    git config user.name "Just Ahsan"
     git config user.email "ahsan.iqbal@example.com"
     Write-Host "Git initialized!" -ForegroundColor Green
     Write-Host ""
