@@ -1,12 +1,77 @@
+"""
+MongoDB Patient Routes Module
+
+Handles CRUD operations for patient records stored in MongoDB (NoSQL database).
+
+Author: Ahsan Iqbal
+Course: COM7033 - Secure Programming
+Institution: Leeds Trinity University
+
+Features:
+    - List all MongoDB patient records
+    - Add new patient to MongoDB
+    - Edit existing MongoDB patient
+    - Delete MongoDB patient
+    - Flexible NoSQL schema (no fixed columns required)
+
+Database Architecture:
+    - SQLite: Structured data (users, Kaggle dataset, patient reports)
+    - MongoDB: Flexible patient records with varying schemas
+    
+Security:
+    - @staff_required decorator: Restricts access to admin and doctor roles
+    - Session-based authentication
+    - ObjectId validation for MongoDB document IDs
+    - Input validation for numeric fields
+
+MongoDB Operations:
+    - Collection: patients
+    - Uses BSON ObjectId for document identification
+    - Supports flexible schema without migrations
+
+Note:
+    This module demonstrates NoSQL database integration.
+    For SQLite patient data (Kaggle dataset), see patient_routes.py.
+"""
+
+# Flask imports
 from flask import Blueprint, render_template, redirect, url_for, flash, request, session
-from functools import wraps
-from bson.objectid import ObjectId
+
+# Standard library imports
+from functools import wraps  # Preserves function metadata in decorators
+
+# Third-party imports
+from bson.objectid import ObjectId  # MongoDB document ID type
+
+# Local imports
 from database.mongo import add_patient, get_patient, update_patient, delete_patient, list_patients
 
+# Initialize Flask Blueprint for MongoDB patient routes
 mongo_patients_bp = Blueprint("mongo_patients", __name__)
 
-# Only allow admin/doctor to access global patient CRUD
+
+# ============================================================
+# ACCESS CONTROL DECORATOR
+# ============================================================
+
 def staff_required(f):
+    """
+    Decorator to restrict access to admin and doctor roles only.
+    
+    Prevents patients from accessing MongoDB CRUD operations.
+    Only staff members (admin, doctor) can manage NoSQL patient records.
+    
+    Args:
+        f: Flask route function to wrap
+        
+    Returns:
+        Decorated function with role-based access control
+        
+    Behavior:
+        - Not logged in: Redirect to login page
+        - Patient role: Redirect to patient dashboard with error message
+        - Admin/Doctor: Allow access to route
+    """
     @wraps(f)
     def wrapper(*args, **kwargs):
         if "user_id" not in session:

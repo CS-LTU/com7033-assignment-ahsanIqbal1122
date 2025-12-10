@@ -1,10 +1,45 @@
+"""
+Dashboard Routes Module
 
+Handles role-based dashboard functionality for admin, doctor, and patient users.
 
+Author: Ahsan Iqbal
+Course: COM7033 - Secure Programming
+Institution: Leeds Trinity University
+
+Features:
+    - Role-based access control with decorators
+    - Admin: User management, approvals, doctor/patient overview
+    - Doctor: View assigned patients, edit/delete patient reports
+    - Patient: View personal reports, submit new reports, edit/delete own reports
+    - Patient report CRUD operations (Create, Read, Update, Delete)
+    - User account management (create, approve, delete)
+
+Security:
+    - @role_required decorator: Restricts routes to specific roles
+    - @roles_required decorator: Allows multiple roles (e.g., patient OR doctor)
+    - Session-based authentication validation
+    - SQL injection prevention with parameterized queries
+    - Role-based query filtering (patients: WHERE user_id=?, doctors: all records)
+
+Dependencies:
+    - Flask: Web framework and request handling
+    - functools.wraps: Preserves function metadata in decorators
+    - database.db: SQLite database operations
+    - werkzeug.security: Password hashing for user creation
+"""
+
+# Flask imports
 from flask import Blueprint, render_template, session, redirect, url_for, flash, request
-from functools import wraps
-from database.db import get_db
-from werkzeug.security import generate_password_hash
 
+# Standard library imports
+from functools import wraps  # Preserves function metadata in decorators
+
+# Local imports
+from database.db import get_db  # SQLite database connection
+from werkzeug.security import generate_password_hash  # Password hashing
+
+# Initialize Flask Blueprint for dashboard routes
 dashboard_bp = Blueprint("dashboard", __name__)
 
 def role_required(role):

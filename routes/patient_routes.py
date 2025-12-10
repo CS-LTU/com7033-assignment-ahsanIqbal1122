@@ -1,13 +1,71 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request, session
-from functools import wraps
-from database.db import get_db
+"""
+Patient Routes Module
 
+Handles CRUD operations for the Kaggle stroke prediction dataset (patients table).
+
+Author: Ahsan Iqbal
+Course: COM7033 - Secure Programming
+Institution: Leeds Trinity University
+
+Features:
+    - List all patients from Kaggle dataset
+    - Add new patient records
+    - Edit existing patient data
+    - Delete patient records
+    - View individual patient details
+    - Public pages (home, about, contact)
+
+Security:
+    - @staff_required decorator: Restricts CRUD operations to admin and doctor roles
+    - Session-based authentication
+    - SQL injection prevention with parameterized queries
+    - Input validation for numeric fields
+
+Database:
+    - Table: patients (Kaggle stroke prediction dataset)
+    - 5,110+ records with 12 columns including stroke risk factors
+    - Used for stroke prediction analysis and machine learning
+
+Note:
+    This module manages the Kaggle training dataset (patients table).
+    For user-submitted patient reports, see dashboard_routes.py (patient_reports table).
+"""
+
+# Flask imports
+from flask import Blueprint, render_template, redirect, url_for, flash, request, session
+
+# Standard library imports
+from functools import wraps  # Preserves function metadata in decorators
+
+# Local imports
+from database.db import get_db  # SQLite database connection
+
+# Initialize Flask Blueprint for patient routes
 patients_bp = Blueprint("patients", __name__)
 
 
+# ============================================================
+# ACCESS CONTROL DECORATOR
+# ============================================================
 
-# Only allow admin/doctor to access global patient CRUD
 def staff_required(f):
+    """
+    Decorator to restrict access to admin and doctor roles only.
+    
+    Prevents patients from accessing Kaggle dataset CRUD operations.
+    Only staff members (admin, doctor) can manage training data.
+    
+    Args:
+        f: Flask route function to wrap
+        
+    Returns:
+        Decorated function with role-based access control
+        
+    Behavior:
+        - Not logged in: Redirect to login page
+        - Patient role: Redirect to patient dashboard with error message
+        - Admin/Doctor: Allow access to route
+    """
     @wraps(f)
     def wrapper(*args, **kwargs):
         if "user_id" not in session:
