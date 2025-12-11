@@ -12,6 +12,7 @@ Design Pattern: Service Layer Pattern
 
 Security Features:
 - Scrypt password hashing (32,768 iterations)
+- Strong password validation (8+ chars, uppercase, lowercase, digit, special char)
 - Parameterized SQL queries (SQL injection prevention)
 - Input validation and sanitization
 - Secure session management
@@ -22,9 +23,57 @@ Institution: Leeds Trinity University
 """
 
 import logging
+import re
 from typing import Optional, Dict, Tuple
 from werkzeug.security import generate_password_hash, check_password_hash
 from database.db import get_db_connection
+
+
+def validate_password_strength(password: str) -> Tuple[bool, str]:
+    """
+    Validate password meets security requirements.
+    
+    Args:
+        password (str): The password to validate
+        
+    Returns:
+        Tuple[bool, str]: 
+            - True if password is valid, False otherwise
+            - Error message if invalid, empty string if valid
+            
+    Password Requirements (OWASP Guidelines):
+    - Minimum 8 characters (prevents brute force attacks)
+    - At least one uppercase letter (A-Z)
+    - At least one lowercase letter (a-z)
+    - At least one digit (0-9)
+    - At least one special character from: @$!%*?&#
+    
+    Security Rationale:
+    - Longer passwords exponentially increase brute force complexity
+    - Character diversity prevents dictionary attacks
+    - Special characters defeat common password patterns
+    
+    Example:
+        >>> is_valid, error = validate_password_strength("Abc123!@")
+        >>> if is_valid:
+        ...     print("Password is strong")
+    """
+    if len(password) < 8:
+        return False, "Password must be at least 8 characters long"
+    
+    if not re.search(r'[A-Z]', password):
+        return False, "Password must contain at least one uppercase letter (A-Z)"
+    
+    if not re.search(r'[a-z]', password):
+        return False, "Password must contain at least one lowercase letter (a-z)"
+    
+    if not re.search(r'\d', password):
+        return False, "Password must contain at least one digit (0-9)"
+    
+    if not re.search(r'[@$!%*?&#]', password):
+        return False, "Password must contain at least one special character (@$!%*?&#)"
+    
+    return True, ""
 
 
 class AuthService:
@@ -146,8 +195,10 @@ class AuthService:
         if len(username) < 3:
             return False, "Username must be at least 3 characters"
         
-        if len(password) < 6:
-            return False, "Password must be at least 6 characters"
+        # Enforce strong password requirements
+        is_valid, error_message = validate_password_strength(password)
+        if not is_valid:
+            return False, error_message
         
         if role not in ['patient', 'doctor', 'admin']:
             return False, "Invalid role specified"
@@ -232,12 +283,13 @@ class AuthService:
             
         Security:
         - Verifies old password before allowing change
-        - Enforces password complexity requirements
+        - Enforces strong password complexity requirements
         - Hashes new password with scrypt
         """
-        # Password validation
-        if len(new_password) < 6:
-            return False, "New password must be at least 6 characters"
+        # Strong password validation
+        is_valid, error_message = validate_password_strength(new_password)
+        if not is_valid:
+            return False, error_message
         
         try:
             conn = get_db_connection()

@@ -18,8 +18,49 @@ Security Features:
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from database.db import get_db
+import re
 
 auth_bp = Blueprint("auth", __name__)
+
+
+def validate_password_strength(password):
+    """
+    Validate password strength with comprehensive security requirements.
+    
+    Requirements:
+    - Minimum 8 characters
+    - At least one uppercase letter
+    - At least one lowercase letter
+    - At least one digit
+    - At least one special character (@$!%*?&#)
+    
+    Args:
+        password (str): Password to validate
+        
+    Returns:
+        tuple: (is_valid: bool, error_message: str)
+        
+    Security Rationale:
+        - Length requirement prevents brute force attacks
+        - Character variety increases entropy
+        - Special characters make dictionary attacks harder
+    """
+    if len(password) < 8:
+        return False, "Password must be at least 8 characters long"
+    
+    if not re.search(r'[A-Z]', password):
+        return False, "Password must contain at least one uppercase letter"
+    
+    if not re.search(r'[a-z]', password):
+        return False, "Password must contain at least one lowercase letter"
+    
+    if not re.search(r'\d', password):
+        return False, "Password must contain at least one number"
+    
+    if not re.search(r'[@$!%*?&#]', password):
+        return False, "Password must contain at least one special character (@$!%*?&#)"
+    
+    return True, ""
 
 
 @auth_bp.route("/register", methods=["GET"])
@@ -140,7 +181,12 @@ def register_doctor():
     
     Security Features:
     1. Required fields validation (username, password, full_name, email, license_number)
-    2. Password length validation (minimum 6 characters)
+    2. Strong password validation:
+       - Minimum 8 characters
+       - At least one uppercase letter
+       - At least one lowercase letter
+       - At least one digit
+       - At least one special character (@$!%*?&#)
     3. Unique username check to prevent duplicate accounts
     4. Password hashing with scrypt algorithm before storage
     5. Input sanitization with .strip()
@@ -169,9 +215,10 @@ def register_doctor():
             flash("All fields are required for doctor registration.", "danger")
             return redirect(url_for("auth.register_doctor"))
 
-        # Enforce minimum password length for security
-        if len(password) < 6:
-            flash("Password must be at least 6 characters long.", "danger")
+        # Enforce strong password requirements for security
+        is_valid, error_message = validate_password_strength(password)
+        if not is_valid:
+            flash(error_message, "danger")
             return redirect(url_for("auth.register_doctor"))
 
         # Hash password using scrypt algorithm (32,768 iterations)
@@ -232,8 +279,10 @@ def register_patient():
             flash("All fields are required for patient registration.", "danger")
             return redirect(url_for("auth.register_patient"))
 
-        if len(password) < 6:
-            flash("Password must be at least 6 characters long.", "danger")
+        # Enforce strong password requirements for security
+        is_valid, error_message = validate_password_strength(password)
+        if not is_valid:
+            flash(error_message, "danger")
             return redirect(url_for("auth.register_patient"))
 
         password_hash = generate_password_hash(password)
