@@ -332,6 +332,6 @@ By contributing, you agree that your contributions will be licensed under the sa
 
 ---
 
-**Author:** Just Ahsan  
+**Author:**  Ahsan  
 **Course:** COM7033 - Secure Programming  
 **Institution:** Leeds Trinity University
